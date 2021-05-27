@@ -7,12 +7,99 @@
     tools:context=".MainActivity">
 
     <TextView
+        android:id="@+id/addressLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/addressInput"
+        android:text="@string/adres"
+        android:textSize="20sp"/>
 
+    <EditText
+        android:id="@+id/addressInput"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/addressLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/google_logo_link" />
+
+    <Button
+        android:id="@+id/downloadInfoButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/pobierz_informacje"
+        app:layout_constraintTop_toBottomOf="@+id/addressInput" />
+
+    <TextView
+        android:id="@+id/fileSizeLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/downloadInfoButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/fileSizeDisplay"
+        android:text="@string/rozmiar_pliku"
+        android:textSize="20sp"/>
+
+    <EditText
+        android:id="@+id/fileSizeDisplay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        app:layout_constraintTop_toBottomOf="@id/downloadInfoButton"
+        app:layout_constraintStart_toEndOf="@+id/downloadInfoLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/zero"
+        android:clickable="false"/>
+
+    <TextView
+        android:id="@+id/fileTypeLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/fileSizeDisplay"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/fileTypeDisplay"
+        android:text="@string/typ_pliku"
+        android:textSize="20sp"/>
+
+    <EditText
+        android:id="@+id/fileTypeDisplay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        app:layout_constraintTop_toBottomOf="@id/fileSizeDisplay"
+        app:layout_constraintStart_toEndOf="@+id/downloadInfoLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/zero"
+        android:clickable="false"/>
+
+    <Button
+        android:id="@+id/downloadFileButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/pobierz_plik"
+        app:layout_constraintTop_toBottomOf="@+id/fileTypeDisplay" />
+
+    <TextView
+        android:id="@+id/downloadInfoLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/pobrano_bajtow"
+        app:layout_constraintTop_toBottomOf="@id/downloadFileButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/downloadInfoDisplay"
+        android:textSize="20sp"/>
+
+    <EditText
+        android:id="@+id/downloadInfoDisplay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        app:layout_constraintTop_toBottomOf="@id/downloadFileButton"
+        app:layout_constraintStart_toEndOf="@+id/downloadInfoLabel"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:text="@string/zero"
+        android:clickable="false"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
