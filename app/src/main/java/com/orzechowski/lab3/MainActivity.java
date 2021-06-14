@@ -12,6 +12,7 @@ import javax.net.ssl.HttpsURLConnection;
 public class MainActivity extends AppCompatActivity {
 
     private EditText addressInput, fileSize, fileType;
+    Diagnostic task;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
 
         Button downloadInfoButton = findViewById(R.id.downloadInfoButton);
         downloadInfoButton.setOnClickListener(v -> {
-            Diagnostic task = new Diagnostic(addressInput.getText().toString());
+            task = new Diagnostic(addressInput.getText().toString());
             task.start();
         });
     }
@@ -36,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        public void start(){
+        public void run(){
             HttpURLConnection connection = null;
             String size, type;
             try{
