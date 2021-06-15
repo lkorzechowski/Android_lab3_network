@@ -1,9 +1,15 @@
 package com.orzechowski.lab3;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -27,7 +33,20 @@ public class MainActivity extends AppCompatActivity {
             task = new Diagnostic(addressInput.getText().toString());
             task.start();
         });
+
+        Button downloadButton = findViewById(R.id.downloadFileButton);
+        downloadButton.setOnClickListener(v -> {
+            if(ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED){
+                NewIntentService.launchService(this, addressInput.getText().toString());
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                }, 112);
+            }
+        });
     }
+
+
 
     class Diagnostic extends Thread {
         private final String link;
@@ -56,6 +75,20 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             } finally {
                 if (connection != null) connection.disconnect();
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int code, @NonNull String[] permissions, @NonNull int[] decisions){
+        super.onRequestPermissionsResult(code, permissions, decisions);
+        if (code == 112) {
+            if (permissions.length > 0 &&
+                    permissions[0].equals(Manifest.permission.WRITE_EXTERNAL_STORAGE) &&
+                    decisions[0] == PackageManager.PERMISSION_GRANTED) {
+                NewIntentService.launchService(this, addressInput.getText().toString());
+            } else {
+                Toast.makeText(this, "Nie otrzymano uprawnień", Toast.LENGTH_SHORT).show();
             }
         }
     }
