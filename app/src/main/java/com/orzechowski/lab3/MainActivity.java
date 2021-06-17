@@ -3,12 +3,18 @@ package com.orzechowski.lab3;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.net.HttpURLConnection;
@@ -19,6 +25,28 @@ public class MainActivity extends AppCompatActivity {
 
     private EditText addressInput, fileSize, fileType;
     Diagnostic task;
+
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bundle received = intent.getExtras();
+            int downloaded = received.getInt("download");
+            TextView downloadedView = findViewById(R.id.downloadInfoDisplay);
+            downloadedView.setText(String.valueOf(downloaded));
+        }
+    };
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter(NewIntentService.ALERT));
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

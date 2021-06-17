@@ -12,6 +12,8 @@ import android.content.Intent;
 import android.os.Environment;
 import android.util.Log;
 import androidx.annotation.Nullable;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -23,9 +25,11 @@ public class NewIntentService extends IntentService {
 
     private static final String ACT = "com.orzechowski.lab3.action.zadanie1";
     private static final String PAR = "com.orzechowski.lab3.extra.parametr1";
+    public static final String ALERT = "com.orzechowski.lab3.intent_service.receiver";
     private static final int ID = 1;
     private NotificationManager mNotificationManager;
     private int mProgress = 0;
+    private int mTotalDownload = 0;
 
     public NewIntentService(){
         super("NewIntentService");
@@ -46,8 +50,9 @@ public class NewIntentService extends IntentService {
     }
 
     private Notification createNotification(){
-        Intent notificationIntent = new Intent(this, MainActivity.class);
-        notificationIntent.putExtra("download", mProgress);
+        Intent notificationIntent = new Intent(ALERT);
+        notificationIntent.putExtra("download", mTotalDownload);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(notificationIntent);
         TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(this);
         taskStackBuilder.addParentStack(MainActivity.class);
         taskStackBuilder.addNextIntent(notificationIntent);
@@ -62,7 +67,7 @@ public class NewIntentService extends IntentService {
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setWhen(System.currentTimeMillis());
 
-        notificationBuilder.setOngoing(mProgress > 100);
+        notificationBuilder.setOngoing(mProgress < 100);
         return notificationBuilder.build();
     }
 
@@ -108,11 +113,16 @@ public class NewIntentService extends IntentService {
             int downloaded = dataInputStream.read(buffer, 0, 100);
             while (downloaded != -1) {
                 fileOutputStream.write(buffer, 0, downloaded);
+                mTotalDownload += downloaded;
                 mProgress += downloaded * 100/ fileSize;
                 downloaded = dataInputStream.read(buffer, 0, 100);
                 mNotificationManager.notify(ID, createNotification());
+            } if(fileOutputStream.getFD()!=null) {
+                Log.i("Download", "completed");
+                mTotalDownload = fileSize;
+                mProgress = 100;
+                mNotificationManager.notify(ID, createNotification());
             }
-            Log.i("Download", "completed");
             fileOutputStream.flush();
             fileOutputStream.close();
             dataInputStream.close();
